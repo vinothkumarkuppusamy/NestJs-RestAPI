@@ -3,19 +3,10 @@ import {
   Controller,
   Get,
   HttpCode,
-  Param,
   Patch,
   Post,
-  Query,
-  UsePipes,
-  ValidationPipe,
 } from '@nestjs/common';
-import { createAuthDto } from './dto/createAuth.dto';
-import { idparamsPipe } from './dto/idParams.dto';
-import { ZodValidationPipe } from './pipes/ZodValidationPipe';
 import { createAuthSchema, createAuthZodDto } from './dto/createAuthZod.dto';
-import { headerDto } from './dto/header.dto';
-import { RequestHeader } from './pipes/requestHeaderPipe';
 import { AuthenticationService } from './authentication.service';
 
 @Controller('authentication')
