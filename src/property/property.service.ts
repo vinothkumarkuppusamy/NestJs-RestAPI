@@ -27,5 +27,5 @@ export class PropertyService {
     return await this.propertyRepos.save(dto)
   }
 
-  async update() {}
+  async update(id: number) {}
 }

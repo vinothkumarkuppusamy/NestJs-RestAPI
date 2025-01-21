@@ -13,6 +13,6 @@ export class ZodValidationPipe implements PipeTransform {
     if (result.success) {
       return result;
     }
-    throw new BadRequestException(result.error.format());
+    throw new BadRequestException(result.error);
   }
 }

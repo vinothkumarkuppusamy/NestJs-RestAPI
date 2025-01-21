@@ -1,13 +1,16 @@
 import { Body, Controller, Delete, Get, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
-import { productService } from './product.service';
+
 import { createProductDto } from './dto/createProduct.dto';
+import { ProductService } from './product.service';
 
 @Controller('product')
 export class ProductController {
-    constructor(private productService: productService){}
-    @Post()
+    constructor(private productService: ProductService ){}
+    @Post("create")
     @UsePipes(new ValidationPipe())
-    create(@Body() dto: createProductDto){}
+    create(@Body() body : createProductDto){
+        return this.productService.create(body);
+    }
 
     @Get()
     findAll(){}

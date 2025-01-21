@@ -22,8 +22,8 @@ export class PropertyController {
     create(@Body() dto:createPropertydto){
         return this.propertyService.create(dto)
     }
-    @Put()
-    update(){
-        this.propertyService.update()
+    @Put(":id")
+    update(@Param("id", ParseIntPipe) id, @Body() dto: createPropertydto) {
+        return this.propertyService.update(id);
     }
 }
