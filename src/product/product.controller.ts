@@ -1,7 +1,8 @@
-import { Body, Controller, Delete, Get, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
 
 import { createProductDto } from './dto/createProduct.dto';
 import { ProductService } from './product.service';
+import { UpdateProductDto } from './dto/updateProuct.dto';
 
 @Controller('product')
 export class ProductController {
@@ -16,7 +17,7 @@ export class ProductController {
     findAll(){}
 
     @Put()
-    update(){}
+    update(@Param("id") id:string, @Body() body:UpdateProductDto){}
 
     @Delete()
     Delete(){}
