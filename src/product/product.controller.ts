@@ -14,13 +14,17 @@ export class ProductController {
     }
 
     @Get()
-    findAll(@Query() id: number){
-        return this.productService.findAll(id);
+    findAll(){
+        return this.productService.findAll();
     }
 
     @Put()
-    update(@Param("id") id:string, @Body() body:updateProductDto){}
+    update(@Param("id") id:number, @Body() body:updateProductDto){
+        return this.productService.update(id, body);
+    }
 
     @Delete()
-    Delete(){}
+    Delete(@Param("id") id: number){
+        return this.productService.Delete(id)
+    }
 }
