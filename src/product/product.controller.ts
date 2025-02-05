@@ -23,7 +23,7 @@ export class ProductController {
         return this.productService.update(id, body);
     }
 
-    @Delete()
+    @Delete(":id")  
     Delete(@Param("id") id: number){
         return this.productService.Delete(id)
     }

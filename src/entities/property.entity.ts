@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { propertyFeature } from "./propertyFeature.entity";
+import { user } from "./user.entity";
 
 @Entity() // entity decoration
 export class property{
@@ -13,4 +15,12 @@ export class property{
 
     @Column({ default:0 })
     price: number
+
+    @OneToOne(()=>propertyFeature)
+    propertyFeature: propertyFeature
+
+    @ManyToOne(()=> user,
+(user) => user.properties // 
+)
+    user: user
 }
