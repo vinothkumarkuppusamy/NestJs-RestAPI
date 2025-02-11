@@ -1,5 +1,5 @@
 import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { property } from "./property.entity";
+import { Property } from "./property.entity";
 
 @Entity()
 export class propertyFeature{
@@ -15,10 +15,10 @@ export class propertyFeature{
     @Column()
     rooms:number
 
-    @OneToOne(() => property, 
+    @OneToOne(() => Property, 
     (property) => property.propertyFeature, // bidirectional entity relationship 
     { cascade : true }  // If we change id of propertyFeature automatically updates the property foreignkey also
 )
     @JoinColumn()
-    property: property
+    property: Property
 }

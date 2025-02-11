@@ -1,8 +1,8 @@
-import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { property } from "./property.entity";
+import { Column, CreateDateColumn, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Property } from "./property.entity";
 
 @Entity()
-export class user{
+export class User{
     @PrimaryGeneratedColumn() 
     id: number
 
@@ -21,8 +21,12 @@ export class user{
     @CreateDateColumn() // create automatically current date in entity.
     createdAt: Date
 
-    @OneToMany(()=> property, 
+    @OneToMany(()=> Property, 
     (property) => property.user) // one user can have many properties
-    properties: property[]
+    properties: Property[]
+
+    @ManyToMany(()=> Property,(property)=> property.likedBy)
+    @JoinTable({name: "user_liked_properties"}) // own table have a manyTomany child table  
+     likedProperties: Property[]
     
 }

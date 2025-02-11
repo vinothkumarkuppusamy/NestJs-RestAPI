@@ -1,9 +1,9 @@
-import { Column, Entity, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, ManyToMany, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 import { propertyFeature } from "./propertyFeature.entity";
-import { user } from "./user.entity";
+import { User } from "./user.entity";
 
 @Entity() // entity decoration
-export class property{
+export class Property{
     @PrimaryGeneratedColumn() // primary key auto generation decoration
     id: number
 
@@ -19,8 +19,9 @@ export class property{
     @OneToOne(()=>propertyFeature)
     propertyFeature: propertyFeature
 
-    @ManyToOne(()=> user,
-(user) => user.properties // 
-)
-    user: user
+    @ManyToOne(()=> User,(User) => User.properties)
+    user: User
+
+    @ManyToMany(()=>User, (user) => user.likedProperties)
+    likedBy: User[];
 }
