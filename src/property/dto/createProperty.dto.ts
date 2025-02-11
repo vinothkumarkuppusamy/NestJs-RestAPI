@@ -1,12 +1,11 @@
-import {IsInt, IsString, Length} from "class-validator";
-export class createPropertydto{
-    @IsInt()
-    price: number
-    
-    @IsString()
-    name: string
+import { IsInt, IsString, Length } from 'class-validator';
+export class createPropertydto {
+  @IsInt()
+  price: number;
 
-    @IsString()
-    description: string
+  @IsString()
+  name: string;
 
+  @IsString()
+  description: string;
 }

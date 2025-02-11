@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Put, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Body, Controller, Get, Param, ParseIntPipe, Patch, Post, Put, Query, UsePipes, ValidationPipe } from '@nestjs/common';
 import { PropertyService } from './property.service';
 import { createPropertydto } from './dto/createProperty.dto';
+import { paginationDTO } from './dto/pagination.dto';
 // interface Service{
 //     findAll()
 //     create()
@@ -14,16 +15,16 @@ export class PropertyController {
         return this.propertyService.findOne(id);
     }
     @Get()
-    findAll(){
-       this.propertyService.findAll()
+    findAll(@Query() paginationDTO: paginationDTO){
+       return this.propertyService.findAll(paginationDTO)
     }
     @Post()
     @UsePipes(new ValidationPipe())
-    create(@Body() dto:createPropertydto){
+    create( @Body() dto:createPropertydto){
         return this.propertyService.create(dto)
     }
     @Put(":id")
     update(@Param("id", ParseIntPipe) id, @Body() dto: createPropertydto) {
-        return this.propertyService.update(id);
+        return this.propertyService.update(id, dto);
     }
 }
