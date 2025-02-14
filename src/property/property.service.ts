@@ -35,7 +35,6 @@ export class PropertyService {
   }
 
   async update(id: number, dto: createPropertydto) {
-    console.log('first');
     return await this.propertyRepos.update({ id }, dto);
   }
 }
