@@ -7,21 +7,23 @@ import { PropertyModule } from './property/property.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './product/product.module';
 import { ConfigModule } from '@nestjs/config';
+import { UserModule } from './user/user.module';
 import dbConfig from './config/db.config';
+import dbconfigProduction from './config/db.config.production';
 
 @Module({
   imports: [
     ConfigModule.forRoot({  // works globally config .env file
       isGlobal: true, 
       expandVariables: true,
-      load: [dbConfig]
+      load: [dbConfig, dbconfigProduction]
     }),
     AuthenticationModule, 
     PropertyModule, 
     TypeOrmModule.forRootAsync({
-      useFactory: dbConfig,
+      useFactory: process.env.NODE_ENV == "prodcution"? dbconfigProduction : dbConfig, // If NODE_ENV presents production server will be run in production else its run in local
     }), 
-    ProductModule
+    ProductModule, UserModule
   ],
   controllers: [AppController, PropertyController],
   providers: [AppService],
