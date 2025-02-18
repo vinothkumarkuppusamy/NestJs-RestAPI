@@ -8,6 +8,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ProductModule } from './product/product.module';
 import { ConfigModule } from '@nestjs/config';
 import { UserModule } from './user/user.module';
+import { AuthModule } from './auth/auth.module';
 import dbConfig from './config/db.config';
 import dbconfigProduction from './config/db.config.production';
 
@@ -23,7 +24,7 @@ import dbconfigProduction from './config/db.config.production';
     TypeOrmModule.forRootAsync({
       useFactory: process.env.NODE_ENV == "prodcution"? dbconfigProduction : dbConfig, // If NODE_ENV presents production server will be run in production else its run in local
     }), 
-    ProductModule, UserModule
+    ProductModule, UserModule, AuthModule
   ],
   controllers: [AppController, PropertyController],
   providers: [AppService],
