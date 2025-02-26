@@ -2,6 +2,7 @@ import { Controller, Post, Request, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
+import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -11,7 +12,12 @@ export class AuthController {
   @UseGuards(LocalAuthGuard) // this is another method for call AuthGuard local function method
   @Post("login")
   async login(@Request() req){
-    const token = this.authService.login(req.user.id)
-    return {id: req.user.id, token};
+    return this.authService.login(req.user.id, req.user.name, req.user.role)
+    
+  }
+  @UseGuards(RefreshAuthGuard)
+  @Post("refresh")
+  async refreshToken(@Request() req){
+    return this.authService.refreshToken(req.user.id, req.user.name, req.user.role)
   }
 }
