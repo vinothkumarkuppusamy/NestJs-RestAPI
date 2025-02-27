@@ -31,6 +31,9 @@ export class User {
   @Column()
   password: string;
  
+  @Column({nullable:true})
+  hashRefreshToken: string;
+
   @Column({nullable : true}) // Nullable is validate nullable value also
   avatarUrl: string;
     

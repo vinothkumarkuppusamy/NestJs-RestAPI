@@ -5,7 +5,8 @@ import { UserService } from 'src/user/user.service';
 import { AuthJWTPayload } from './types/auth-jwt';
 import refreshJwtConfig from './config/refresh.jwt.config';
 import { ConfigType } from '@nestjs/config';
-
+import * as argon2 from 'argon2';
+import { handleResponse } from 'src/helpers/statuscode.helper';
 @Injectable()
 export class AuthService {
   constructor(
@@ -33,30 +34,70 @@ export class AuthService {
       role: user.role,
     };
   }
-  login(userId: number, name: string, role: string) {
+  async login(userId: number, name: string, role: string) {
     const payload: AuthJWTPayload = {
       sub: userId,
       name: name,
       role: role,
     };
-    const token = this.jwtService.sign(payload);
-    const refreshToken = this.jwtService.sign(payload, this.refreshTokenConfig);
+    const { token, refreshToken } = await this.generateToken(payload);
+    const hashRefreshToken = await argon2.hash(refreshToken);
+    await this.userService.updateRefreshToken(userId, hashRefreshToken);
     return {
       id: userId,
       token,
       refreshToken,
     };
   }
-  refreshToken(userId: number, name: string, role: string) {
+  async generateToken(payload: AuthJWTPayload) {
+    const [token, refreshToken] = await Promise.all([
+      this.jwtService.signAsync(payload),
+      this.jwtService.signAsync(payload, this.refreshTokenConfig),
+    ]);
+    return {
+      token,
+      refreshToken,
+    };
+  }
+  async refreshToken(userId: number, name: string, role: string) {
     const payload: AuthJWTPayload = {
       sub: userId,
       name: name,
       role: role,
     };
-    const token = this.jwtService.sign(payload);
+    
+    const { token, refreshToken } = await this.generateToken(payload);
+    const hashRefreshToken = await argon2.hash(refreshToken);
+    await this.userService.updateRefreshToken(userId, hashRefreshToken);
     return {
       id: userId,
       token,
+      refreshToken,
     };
+  }
+
+  async validateRefreshToken(userId: number, refreshToken: string) {
+    const user = await this.userService.findOne(userId);
+    if (!user || !user.hashRefreshToken)
+      throw new UnauthorizedException('Invalid refresh token');
+    const isRefreshTokenMatch = await argon2.verify(
+      user.hashRefreshToken,
+      refreshToken
+    );
+    if (!isRefreshTokenMatch)
+      throw new UnauthorizedException('Invalid Refresh Token');
+    return {
+      id: userId,
+    };
+  }
+
+  async signOut(userId: number){
+    const updateDoc = await this.userService.updateRefreshToken(userId, null);
+    if(updateDoc){
+      return handleResponse(true, 'User signed out successfully');
+    }
+    else{
+      return handleResponse(false, 'Failed to sign out user');
+    }
   }
 }

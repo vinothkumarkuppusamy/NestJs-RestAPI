@@ -20,7 +20,7 @@ export class PropertyService {
     });
     if (!property)
       throw new NotFoundException(
-        handleResponse(false, 'property not found', ''),
+        handleResponse(false, 'property not found',),
       ); // if property not exception throw error
     return handleResponse(true, 'property retrieved...', property);
   }
