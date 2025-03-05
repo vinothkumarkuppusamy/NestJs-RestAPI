@@ -4,12 +4,15 @@ import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from './guards/local-auth/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth/refresh-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
+import { Pubilc } from './decorators/public.decorators';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   //@UseGuards(AuthGuard('local')) // If call login API first the njs call useGuard-authGuard local strategy (local.strategy.ts)
+  
+  @Pubilc()
   @UseGuards(LocalAuthGuard) // this is another method for call AuthGuard local function method
   @Post('login')
   async login(@Request() req) {
