@@ -9,8 +9,9 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Property } from './property.entity';
-import * as bcrypt from "bcrypt";
+import * as bcrypt from 'bcrypt';
 import { IsOptional } from 'class-validator';
+import { Role } from 'src/auth/enums/role.enum';
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -25,18 +26,22 @@ export class User {
   @Column()
   email: string;
 
-  @Column({ default: 'user' })
-  role: string
-  
+  @Column({
+    type: 'enum', // set field type
+    enum: Role, // set enum field value get from
+    default: Role.USER,
+  })
+  role: Role;
+
   @Column()
   password: string;
- 
-  @Column({nullable:true})
+
+  @Column({ nullable: true })
   hashRefreshToken: string;
 
-  @Column({nullable : true}) // Nullable is validate nullable value also
+  @Column({ nullable: true }) // Nullable is validate nullable value also
   avatarUrl: string;
-    
+
   @CreateDateColumn() // create automatically current date in entity.
   createdAt: Date;
 
@@ -47,8 +52,8 @@ export class User {
   @JoinTable({ name: 'user_liked_properties' }) // own table have a manyTomany child table
   likedProperties: Property[];
 
-  @BeforeInsert() 
-  async hashPassword(){
+  @BeforeInsert()
+  async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10); // hashing the password..
   }
   // async comparePassword(){

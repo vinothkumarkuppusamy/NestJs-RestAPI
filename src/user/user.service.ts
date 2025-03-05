@@ -1,9 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, SetMetadata } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository } from 'typeorm';
+import { Role } from 'src/auth/enums/role.enum';
+import { Roles } from 'src/auth/decorators/roles.decorator';
 
 @Injectable()
 export class UserService {
@@ -32,7 +34,7 @@ export class UserService {
   async findOne(id: number) {
     return this.UserRepo.findOne({
       where: { id },
-      select: ['firstName', 'email', 'role', 'hashRefreshToken'],
+      select: [ 'id', 'firstName', 'email', 'role', 'hashRefreshToken'],
     });
   }
 
