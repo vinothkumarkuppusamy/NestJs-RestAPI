@@ -14,13 +14,16 @@ import { RefreshjwtStrategy } from './strategies/refresh.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './guards/jwt-auth/jwt-auth.guard';
 import { RolesGuard } from './guards/roles/roles.guard';
+import googleOauthConfig from './config/google-oauth.config';
+import { googleStrategy } from './strategies/google.strategy';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([User]),
     JwtModule.registerAsync(jwtConfig.asProvider()), // call factory function of jwtConfig asProvider()
     ConfigModule.forFeature(jwtConfig),  // call jwtconfig module
-    ConfigModule.forFeature(refreshJwtConfig)
+    ConfigModule.forFeature(refreshJwtConfig),
+    ConfigModule.forFeature(googleOauthConfig)
   ],
   controllers: [AuthController],
   providers: [
@@ -29,6 +32,7 @@ import { RolesGuard } from './guards/roles/roles.guard';
     LocalStrategy, 
     jwtStrategy,
     RefreshjwtStrategy,
+    googleStrategy,
     {
       provide: APP_GUARD,
       useClass: JwtAuthGuard  // @useGuards(JWTAuthGuard) applied on all API endpoints

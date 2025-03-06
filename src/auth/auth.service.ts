@@ -8,6 +8,7 @@ import { ConfigType } from '@nestjs/config';
 import * as argon2 from 'argon2';
 import { handleResponse } from 'src/helpers/statuscode.helper';
 import { currentUser } from './types/currentUser';
+import { CreateUserDto } from 'src/user/dto/create-user.dto';
 @Injectable()
 export class AuthService {
   constructor(
@@ -91,7 +92,11 @@ export class AuthService {
       id: userId,
     };
   }
-
+  async validateGoogleUser(googleUser: CreateUserDto){
+    const user = await this.userService.findByEmail(googleUser.email);
+    if(user) return user; 
+    return await this.userService.create(googleUser)
+  }
   async signOut(userId: number){
     const updateDoc = await this.userService.updateRefreshToken(userId, null);
     if(updateDoc){
